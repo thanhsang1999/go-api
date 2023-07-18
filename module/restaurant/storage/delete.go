@@ -2,6 +2,7 @@ package restaurantstorage
 
 import (
 	"context"
+	"go-api/common"
 	restaurantmodel "go-api/module/restaurant/model"
 )
 
@@ -15,7 +16,7 @@ func (s *sqlStore) Delete(
 			"status": 0,
 		}).
 		Error; err != nil {
-		return err
+		return common.ErrDB(err)
 	}
 	return nil
 }

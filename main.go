@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"go-api/component/appctx"
+	"go-api/middleware"
 	"go-api/module/restaurant/transport/ginrestaurant"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -20,6 +21,7 @@ func main() {
 	appCtx := appctx.NewAppContext(db)
 
 	router := gin.Default()
+	router.Use(middleware.Recover(appCtx))
 	v1 := router.Group("/v1")
 	restaurantRouter := v1.Group("/restaurants")
 	restaurantRouter.POST("", ginrestaurant.CreateRestaurant(appCtx))
