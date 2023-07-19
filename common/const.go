@@ -5,6 +5,7 @@ import "log"
 const (
 	DbTypeRestaurant = 1
 	DbTypeUser       = 2
+	CurrentUser      = "CURRENT_USER"
 )
 
 func AppRecover() {

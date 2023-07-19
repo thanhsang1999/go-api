@@ -7,6 +7,7 @@ import (
 	restaurantbusiness "go-api/module/restaurant/business"
 	restaurantmodel "go-api/module/restaurant/model"
 	restaurantstorage "go-api/module/restaurant/storage"
+	"go-api/module/user/usermodel"
 	"net/http"
 )
 
@@ -26,6 +27,8 @@ func CreateRestaurant(appCtx appctx.AppContext) gin.HandlerFunc {
 
 		store := restaurantstorage.NewSQLStore(appCtx.GetMainDBConnection())
 		business := restaurantbusiness.NewCreateRestaurantBusiness(store)
+		user := c.MustGet(common.CurrentUser).(usermodel.User)
+		data.OwnerId = user.Id
 		err := business.CreateRestaurant(c.Request.Context(), &data)
 		if err != nil {
 			panic(err)

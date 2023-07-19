@@ -12,6 +12,7 @@ import (
 )
 
 func main() {
+
 	dsn := os.Getenv("SQL_DSN")
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -23,7 +24,7 @@ func main() {
 	router := gin.Default()
 	router.Use(middleware.Recover(appCtx))
 	v1 := router.Group("/v1")
-	restaurantRouter := v1.Group("/restaurants")
+	restaurantRouter := v1.Group("/restaurants", middleware.Authenticate(appCtx))
 	restaurantRouter.POST("", ginrestaurant.CreateRestaurant(appCtx))
 	restaurantRouter.DELETE("/:id", ginrestaurant.DeleteRestaurant(appCtx))
 	restaurantRouter.GET("", ginrestaurant.ListRestaurant(appCtx))
