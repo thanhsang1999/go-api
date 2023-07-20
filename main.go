@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"go-api/component/appctx"
 	"go-api/middleware"
-	"go-api/module/restaurant/transport/ginrestaurant"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"
@@ -23,11 +22,7 @@ func main() {
 
 	router := gin.Default()
 	router.Use(middleware.Recover(appCtx))
-	v1 := router.Group("/v1")
-	restaurantRouter := v1.Group("/restaurants", middleware.Authenticate(appCtx))
-	restaurantRouter.POST("", ginrestaurant.CreateRestaurant(appCtx))
-	restaurantRouter.DELETE("/:id", ginrestaurant.DeleteRestaurant(appCtx))
-	restaurantRouter.GET("", ginrestaurant.ListRestaurant(appCtx))
-	router.Run() //
+	RouterV1(appCtx, router.Group("/v1"))
+	_ = router.Run()
 
 }

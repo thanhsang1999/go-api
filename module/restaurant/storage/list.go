@@ -34,7 +34,7 @@ func (s *sqlStore) ListDataWithCondition(
 		db = db.Offset(offset)
 	}
 
-	if err := db.Limit(paging.Size).Order("id desc").Find(&result).Error; err != nil {
+	if err := db.Preload("User").Limit(paging.Size).Order("id desc").Find(&result).Error; err != nil {
 		return nil, err
 	}
 
