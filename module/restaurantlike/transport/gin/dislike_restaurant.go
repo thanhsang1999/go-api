@@ -20,7 +20,7 @@ func DislikeRestaurant(appCtx appctx.AppContext) gin.HandlerFunc {
 		}
 
 		store := restaurantlikestorage.NewSQLStore(appCtx.GetMainDBConnection())
-		business := restaurantlikebiz.NewCreateRestaurantDisLikeBiz(store)
+		business := restaurantlikebiz.NewCreateRestaurantDisLikeBiz(store, appCtx.GetPubSub())
 		user := c.MustGet(common.CurrentUser).(usermodel.User)
 
 		var data = &restaurantlikemodel.RestaurantLikes{

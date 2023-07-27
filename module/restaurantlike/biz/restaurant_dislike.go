@@ -2,7 +2,9 @@ package restaurantlikebiz
 
 import (
 	"context"
+	"go-api/common"
 	restaurantlikemodel "go-api/module/restaurantlike/model"
+	"go-api/pubsub"
 )
 
 type RestaurantDisLikeStore interface {
@@ -11,10 +13,11 @@ type RestaurantDisLikeStore interface {
 
 type createRestaurantDisLikeBiz struct {
 	store RestaurantDisLikeStore
+	ps    pubsub.Pubsub
 }
 
-func NewCreateRestaurantDisLikeBiz(store RestaurantDisLikeStore) *createRestaurantDisLikeBiz {
-	return &createRestaurantDisLikeBiz{store}
+func NewCreateRestaurantDisLikeBiz(store RestaurantDisLikeStore, ps pubsub.Pubsub) *createRestaurantDisLikeBiz {
+	return &createRestaurantDisLikeBiz{store, ps}
 }
 
 func (c *createRestaurantDisLikeBiz) DislikeRestaurant(ctx context.Context, data *restaurantlikemodel.RestaurantLikes) error {
@@ -22,6 +25,7 @@ func (c *createRestaurantDisLikeBiz) DislikeRestaurant(ctx context.Context, data
 		"restaurant_id": data.RestaurantId,
 		"user_id":       data.UserId,
 	})
+	_ = c.ps.Publish(ctx, common.TopicDisLikeRestaurant, pubsub.NewMessage(data))
 	if err != nil {
 		return err
 	}
